@@ -1,6 +1,10 @@
 def start():
-	pass
+	indexer()
 
+
+def indexer():
+	pass
+	
 # Tokens: all alphanumeric sequences in the dataset.
 
 # Stop words: do not use stopping while indexing, i.e. use all words, even the frequently occurring ones.
