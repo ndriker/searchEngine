@@ -2,17 +2,19 @@ from bs4 import BeautifulSoup
 from nltk.stem.snowball import SnowballStemmer
 from posting import Posting
 import json
+from pathlib import Path
 
 
 def start(inverted_index):
 	indexer(inverted_index)
+	write_report(inverted_index)
 	# print(indexer(inverted_index))
 
 
-
+# https://stackoverflow.com/questions/39909655/listing-of-all-files-in-directory
 def indexer(inverted_index):
 	n = 0
-	documents = ['/home/farbod/Documents/m1_proj/searchEngine/source/sherlock_ics_uci_edu/0c2b9a574025e46c443fee02f6269df8f573f95784713e1dbd5c2e2cd07fb6ef.json']
+	documents = searching_all_files('/home/farbod/Documents/m1_proj/searchEngine/source/sherlock_ics_uci_edu')
 	for document in documents:
 		n += 1
 		content = extract_json_content(document)
@@ -24,7 +26,7 @@ def indexer(inverted_index):
 				inverted_index[token] = []
 			inverted_index[token].append(Posting(n, word_freq[token], i))
 
-			print(token, " ", Posting(n, word_freq[token], i))
+			# print(token, " ", Posting(n, word_freq[token], i))
 
 	return inverted_index
 
@@ -34,7 +36,6 @@ def extract_json_content(path):
 	try:
 		with open(path) as f:
 			file = json.load(f)
-		print(file['encoding'])
 	except EnvironmentError as error:
 		print(error, " while reading ", path)
 	if file:
@@ -63,7 +64,33 @@ def computeWordFrequencies(tokens):
 			wordfreq[token] += 1
 	return wordfreq
 
+def searching_all_files(directory):
+	dirpath = Path(directory)
+	assert(dirpath.is_dir())
+	file_list = []
+	for x in dirpath.iterdir():
+		if x.is_file():
+			file_list.append(x)
+		elif x.is_dir():
+			file_list.extend(searching_all_files(x))
+	return file_list
 
+def write_report(inverted_index):
+	file = open('report.txt', 'w')
+	max_id = 0
+	for key, value in inverted_index.items():
+		postings = key
+		for posting in value:
+			if posting.get_id() > max_id:
+				max_id = posting.get_id()
+			postings += "," + "(" + str(posting) + ")"
+		file.write(postings + "\n")
+	print("Number of Index Documents: ", max_id)
+	print("Total Number of Unique Words: ", len(inverted_index))
+	p_file = Path('report.txt') # or Path('./doc.txt')
+	size = p_file.stat().st_size
+	print("Total Index Size: ", size)
+	file.close()
 
 
 # Stop words: do not use stopping while indexing, i.e. use all words, even the frequently occurring ones.
@@ -74,3 +101,4 @@ def computeWordFrequencies(tokens):
 if __name__ == '__main__':
 	inverted_index = dict()
 	start(inverted_index)
+	# print(searching_all_files('/home/farbod/Documents/m1_proj/searchEngine/source/sherlock_ics_uci_edu'))

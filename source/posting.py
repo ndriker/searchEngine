@@ -4,5 +4,8 @@ class Posting:
         self.freq_counts = freq_counts
         self.position = position
 
+    def get_id(self):
+        return self.doc_id
+
     def __str__(self):
-        return f'doc id is {self.doc_id}, token frequency is {self.freq_counts}, token position is {self.position}'
+        return f' {self.doc_id}, {self.freq_counts}, {self.position}'
