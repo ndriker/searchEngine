@@ -6,7 +6,7 @@ from pathlib import Path
 
 
 def start(inverted_index):
-	indexer(inverted_index)
+	inverted_index = indexer(inverted_index)
 	write_report(inverted_index)
 	# print(indexer(inverted_index))
 
@@ -25,7 +25,6 @@ def indexer(inverted_index):
 			if token not in inverted_index:
 				inverted_index[token] = []
 			inverted_index[token].append(Posting(n, word_freq[token], i))
-
 			# print(token, " ", Posting(n, word_freq[token], i))
 
 	return inverted_index
@@ -47,9 +46,10 @@ def extract_json_content(path):
 def tokonize(html_content):
 	soup = BeautifulSoup(html_content, features='html.parser')
 	stemmer = SnowballStemmer(language='english')
+	# shelly -> shelli (result of snowball stemmer)
+	# https://snowballstem.org/demo.html
 
 	tokens = list()
-	count = 0
 	for word in soup.text.split():
 		word = stemmer.stem(word.lower())
 		tokens.append(word)
@@ -85,6 +85,7 @@ def write_report(inverted_index):
 				max_id = posting.get_id()
 			postings += "," + "(" + str(posting) + ")"
 		file.write(postings + "\n")
+
 	print("Number of Index Documents: ", max_id)
 	print("Total Number of Unique Words: ", len(inverted_index))
 	p_file = Path('report.txt') # or Path('./doc.txt')
