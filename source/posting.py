@@ -8,4 +8,4 @@ class Posting:
         return self.doc_id
 
     def __str__(self):
-        return f' {self.doc_id}, {self.freq_counts}, {self.position}'
+        return f'{self.doc_id},{self.freq_counts},{self.position}'
