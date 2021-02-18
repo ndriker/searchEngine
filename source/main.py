@@ -3,18 +3,23 @@ from nltk.stem.snowball import SnowballStemmer
 from posting import Posting
 import json
 from pathlib import Path
-
+import re
+from string import punctuation
 
 def start(inverted_index):
 	inverted_index = indexer(inverted_index)
 	write_report(inverted_index)
+	create_index_squared("inverted_index.txt")
 	# print(indexer(inverted_index))
 
 
 # https://stackoverflow.com/questions/39909655/listing-of-all-files-in-directory
 def indexer(inverted_index):
 	n = 0
-	documents = searching_all_files('/home/farbod/Documents/m1_proj/searchEngine/source/sherlock_ics_uci_edu')
+
+	#/home/fghiasi/inf141Proj2_last_update/inf141Proj2/Assignment3/DEV
+
+	documents = searching_all_files('/home/fghiasi/M1_project/searchEngine/examples/aiclub_ics_uci_edu')
 	for document in documents:
 		n += 1
 		content = extract_json_content(document)
@@ -40,19 +45,54 @@ def extract_json_content(path):
 	if file:
 		return file['content']
 
+def create_index_squared(inverted_index_file):
+	postingsSize = 0
+	index_list = []
 
-
+	with open(inverted_index_file) as f:
+		# index = 0
+		for line in f:
+			if "," not in line and '$' not in line:
+				#line is token, not posting because of the comma
+				#line is token, 0 is starting position
+				index_list.append(line.strip('\n'))
+			postingsSize += len(line) + 1
+			if line.startswith('$'):
+				start = postingsSize
+				# index += 1
+				# index_list[index][1] = start
+				index_list.append(start)
+	tmt_list = []
+	for i in range(0, len(index_list), 2):
+		tmt_list.append((index_list[i], index_list[i+1]))
+	file = open("index_of_index.txt", "w")
+	for tuple_item in sorted(tmt_list):
+		string1 = "{} {}\n".format(tuple_item[0], tuple_item[1])
+		file.write(string1)
+	file.close()
 # Tokens: all alphanumeric sequences in the dataset.
 def tokonize(html_content):
 	soup = BeautifulSoup(html_content, features='html.parser')
 	stemmer = SnowballStemmer(language='english')
 	# shelly -> shelli (result of snowball stemmer)
 	# https://snowballstem.org/demo.html
+	text_p = (''.join(s.findAll(text=True)) for s in soup.findAll('p'))
+	text_divs = (''.join(s.findAll(text=True)) for s in soup.findAll('div'))
 
 	tokens = list()
-	for word in soup.text.split():
-		word = stemmer.stem(word.lower())
-		tokens.append(word)
+	for paragraph in text_p:
+		for raw_word in paragraph.split():
+			token = raw_word.strip(punctuation).lower()
+			if token.isalnum():
+				word = stemmer.stem(token)
+				tokens.append(word)
+
+	for paragraph in text_divs:
+		for raw_word in paragraph.split():
+			token = raw_word.strip(punctuation).lower()
+			if token.isalnum():
+				word = stemmer.stem(token)
+				tokens.append(word)
 	return tokens
 
 def computeWordFrequencies(tokens):
@@ -76,19 +116,20 @@ def searching_all_files(directory):
 	return file_list
 
 def write_report(inverted_index):
-	file = open('report.txt', 'w')
+	file = open('inverted_index.txt', 'w')
 	max_id = 0
 	for key, value in inverted_index.items():
 		postings = key
+		file.write(key + "\n")
 		for posting in value:
 			if posting.get_id() > max_id:
 				max_id = posting.get_id()
-			postings += "," + "(" + str(posting) + ")"
-		file.write(postings + "\n")
+			file.write(str(posting) + "\n")
+		file.write("$\n")
 
 	print("Number of Index Documents: ", max_id)
 	print("Total Number of Unique Words: ", len(inverted_index))
-	p_file = Path('report.txt') # or Path('./doc.txt')
+	p_file = Path('inverted_index.txt') # or Path('./doc.txt')
 	size = p_file.stat().st_size
 	print("Total Index Size: ", size)
 	file.close()
