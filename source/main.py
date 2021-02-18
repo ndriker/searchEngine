@@ -17,9 +17,10 @@ def start(inverted_index):
 def indexer(inverted_index):
 	n = 0
 
+	#/home/fghiasi/M1_project/searchEngine/examples/aiclub_ics_uci_edu
 	#/home/fghiasi/inf141Proj2_last_update/inf141Proj2/Assignment3/DEV
-
-	documents = searching_all_files('/home/fghiasi/M1_project/searchEngine/examples/aiclub_ics_uci_edu')
+	#documents = searching_all_files('/home/fghiasi/M1_project/searchEngine/examples/aiclub_ics_uci_edu')
+	documents = ['C:\\Users\\NoobMaster69\\Desktop\\School\\CS 121 - Info Retrieval\\Assignments\\3-Search-Engine\\searchEngine\\examples\\aiclub_ics_uci_edu']
 	for document in documents:
 		n += 1
 		content = extract_json_content(document)
@@ -50,7 +51,7 @@ def create_index_squared(inverted_index_file):
 	index_list = []
 
 	with open(inverted_index_file) as f:
-		# index = 0
+		start = 0
 		for line in f:
 			if "," not in line and '$' not in line:
 				#line is token, not posting because of the comma
@@ -58,18 +59,20 @@ def create_index_squared(inverted_index_file):
 				index_list.append(line.strip('\n'))
 			postingsSize += len(line) + 1
 			if line.startswith('$'):
-				start = postingsSize
-				# index += 1
-				# index_list[index][1] = start
 				index_list.append(start)
+				start = postingsSize
+
 	tmt_list = []
 	for i in range(0, len(index_list), 2):
 		tmt_list.append((index_list[i], index_list[i+1]))
+
+
 	file = open("index_of_index.txt", "w")
 	for tuple_item in sorted(tmt_list):
 		string1 = "{} {}\n".format(tuple_item[0], tuple_item[1])
 		file.write(string1)
 	file.close()
+
 # Tokens: all alphanumeric sequences in the dataset.
 def tokonize(html_content):
 	soup = BeautifulSoup(html_content, features='html.parser')
