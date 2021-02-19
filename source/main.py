@@ -20,7 +20,8 @@ def indexer(inverted_index):
 	#/home/fghiasi/M1_project/searchEngine/examples/aiclub_ics_uci_edu
 	#/home/fghiasi/inf141Proj2_last_update/inf141Proj2/Assignment3/DEV
 	#documents = searching_all_files('/home/fghiasi/M1_project/searchEngine/examples/aiclub_ics_uci_edu')
-	documents = ['C:\\Users\\NoobMaster69\\Desktop\\School\\CS 121 - Info Retrieval\\Assignments\\3-Search-Engine\\searchEngine\\examples\\aiclub_ics_uci_edu']
+	#C:\\Users\\NoobMaster69\\Desktop\\School\\CS 121 - Info Retrieval\\Assignments\\3-Search-Engine\\searchEngine\\examples\\aiclub_ics_uci_edu
+	documents = ['/home/fghiasi/M1_project/searchEngine/examples/aiclub_ics_uci_edu/8ef6d99d9f9264fc84514cdd2e680d35843785310331e1db4bbd06dd2b8eda9b.json']
 	for document in documents:
 		n += 1
 		content = extract_json_content(document)
@@ -57,7 +58,7 @@ def create_index_squared(inverted_index_file):
 				#line is token, not posting because of the comma
 				#line is token, 0 is starting position
 				index_list.append(line.strip('\n'))
-			postingsSize += len(line) + 1
+			postingsSize += len(line)
 			if line.startswith('$'):
 				index_list.append(start)
 				start = postingsSize
