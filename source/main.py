@@ -5,6 +5,7 @@ import json
 from pathlib import Path
 import re
 from string import punctuation
+from urllib.parse import urldefrag
 
 def start(inverted_index):
 	inverted_index = indexer(inverted_index)
@@ -15,16 +16,24 @@ def start(inverted_index):
 
 # https://stackoverflow.com/questions/39909655/listing-of-all-files-in-directory
 def indexer(inverted_index):
+
+	doc_id_file = open("doc_ids_urls.txt", "w")
 	n = 0
 
 	#/home/fghiasi/M1_project/searchEngine/examples/aiclub_ics_uci_edu
 	#/home/fghiasi/inf141Proj2_last_update/inf141Proj2/Assignment3/DEV
-	#documents = searching_all_files('/home/fghiasi/M1_project/searchEngine/examples/aiclub_ics_uci_edu')
+	documents = searching_all_files('/home/fghiasi/inf141Proj2_last_update/inf141Proj2/Assignment3/DEV')
 	#C:\\Users\\NoobMaster69\\Desktop\\School\\CS 121 - Info Retrieval\\Assignments\\3-Search-Engine\\searchEngine\\examples\\aiclub_ics_uci_edu
-	documents = ['/home/fghiasi/M1_project/searchEngine/examples/aiclub_ics_uci_edu/8ef6d99d9f9264fc84514cdd2e680d35843785310331e1db4bbd06dd2b8eda9b.json']
+	# documents = ['/home/fghiasi/M1_project/searchEngine/examples/aiclub_ics_uci_edu/8ef6d99d9f9264fc84514cdd2e680d35843785310331e1db4bbd06dd2b8eda9b.json']
+
 	for document in documents:
 		n += 1
-		content = extract_json_content(document)
+		content = extract_json_content(document, 'content')
+		url = extract_json_content(document, 'url')
+
+		doc_id_url_str = "{} {}\n".format(n, url)
+		doc_id_file.write(doc_id_url_str)
+
 		text = tokonize(content)
 		word_freq = computeWordFrequencies(text)
 
@@ -33,10 +42,12 @@ def indexer(inverted_index):
 				inverted_index[token] = []
 			inverted_index[token].append(Posting(n, word_freq[token], i))
 			# print(token, " ", Posting(n, word_freq[token], i))
-
+	doc_id_file.close()
 	return inverted_index
 
-def extract_json_content(path):
+
+def extract_json_content(path, data_type):
+
 	file = None
 	# https://stackoverflow.com/questions/713794/catching-an-exception-while-using-a-python-with-statement
 	try:
@@ -45,8 +56,14 @@ def extract_json_content(path):
 	except EnvironmentError as error:
 		print(error, " while reading ", path)
 	if file:
-		return file['content']
-
+		if data_type == 'content':
+			return file['content']
+		elif data_type == 'url':
+			try:
+				return urldefrag(file['url']).url
+			except Exception as ex:
+				print(ex)
+				return None
 def create_index_squared(inverted_index_file):
 	postingsSize = 0
 	index_list = []
@@ -58,6 +75,7 @@ def create_index_squared(inverted_index_file):
 				#line is token, not posting because of the comma
 				#line is token, 0 is starting position
 				index_list.append(line.strip('\n'))
+			# for windows: postingsSize += len(line) + 1
 			postingsSize += len(line)
 			if line.startswith('$'):
 				index_list.append(start)
