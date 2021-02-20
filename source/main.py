@@ -20,7 +20,7 @@ def start(inverted_index):
 
 	#inverted_file = open("inverted_index.txt", "r")
 	io_manager = init()
-	print("init done")
+	# print("init done")
 	get_query_input(io_manager)
 
 ############### MILESTONE 2 #####################
@@ -58,6 +58,7 @@ def load_index_of_index_map(index_of_index_file):
 		token = content_list[0]
 		position = content_list[1]
 		index_of_index_map[token] = position # assuming each line has a unique token
+	# print("Done loading index.")
 	return index_of_index_map
 
 def load_doc_ids_urls_map(doc_ids_urls_file):
@@ -72,8 +73,10 @@ def load_doc_ids_urls_map(doc_ids_urls_file):
 
 def get_query_input(io_manager):
 	while True:
-		raw_in = input("Enter your query\n")
-		handle_input(raw_in, io_manager)
+		raw_in = input("Enter your query: ")
+		handle_input(raw_in.lower(), io_manager)
+		# print("Getting query input for: \n", raw_in)
+
 
 def handle_input(raw_input_str, io_manager):
 	# assuming input is just words with spaces
@@ -82,9 +85,10 @@ def handle_input(raw_input_str, io_manager):
 	stemmer = SnowballStemmer(language='english')
 
 	words = raw_input_str.split() #cristina lopes -> ['cristina', 'lopes']
+	# print(words)
 	# words = ['we', 'hold', 'workshop']
 	for word in words:
-		print(word)
+		# print("Processing ", word)
 		# tokenized_word = tokenize(word) #tokenize & stem the word to match our index
 		# #'lopes' -> 'lope'
 		stemmed_word = stemmer.stem(word)
@@ -95,20 +99,26 @@ def handle_input(raw_input_str, io_manager):
 		############# MILE STONE 3 ############
 
 		postings = get_postings(stemmed_word, io_manager.inverted_file) #O(n) linear search until index_of_index is fixed
-		print(stemmed_word, postings)
+		# print(stemmed_word, postings)
 
 		if len(postings) > 0: #if we have any postings
 			# Assumes all words are unique
 			tokens_postings_map[stemmed_word] = postings
-			print(tokens_postings_map)
+			# print(tokens_postings_map)
 		# else, no postings
 		# no results
 
 	# find intersection of posting objects, sort postings by word frequency
 	intersections = find_word_intersection(tokens_postings_map)
-	print("intersections", intersections)
+	# print("intersections", intersections)
 	urls = get_urls(intersections, io_manager)
-	print(urls)
+	# print(urls)
+	print_urls(urls)
+
+def print_urls(urls):
+
+	for i in range(5):
+		print(i + 1 , ": ", urls[i])
 
 def get_urls(intersections, io_manager):
 	# O(1)
@@ -132,27 +142,30 @@ def get_postings(tokenized_word, file_ptr):
 					p_values = line_txt.strip().split(',')  # 1,22,1035 -> ['1', '22', '1035']
 					assert 3 == len(p_values)
 					postings.append(Posting(p_values[0], p_values[1], p_values[2]))
+			file_ptr.seek(0)
 			return postings
-
+	file_ptr.seek(0)
 	return postings # []
 
 def find_word_intersection(tokens_postings_map):
+	# print("Finding intersections.")
 	list_of_sets = []  # [{4,5,6}, {4,5,6,7}, {1,2,3,4,5}]
 	sorted_token_map = sorted(tokens_postings_map.items(), key=(lambda t: len(t[1])))
 	for token,postings in sorted_token_map:
-		print("postings", tokens_postings_map[token])
+		# print("postings", tokens_postings_map[token])
 
 		doc_ids_set = set()
 		for posting in postings:
 			doc_ids_set.add(posting.get_id())
 
 		list_of_sets.append(doc_ids_set)
-	print(list_of_sets)
+	# print(list_of_sets)
 
 	# list_of_sets = [] # [{4,5,6}, {4,5,6,7}, {1,2,3,4,5}]
+
 	first_set = list_of_sets.pop(0)
 	tokens_intersection = first_set.intersection(*list_of_sets) #set of intersected doc ids
-	print(tokens_intersection)
+	# print(tokens_intersection)
 	return tokens_intersection
 
 ############### MILESTONE 1 #####################
