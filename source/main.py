@@ -1,18 +1,18 @@
 # 121-squad
 # Michael Luu, Noah Driker, Farbod Ghiasi, Michael Lofton
 
-from source import search_engine
-from source import index_builder
+import search_engine
+import index_builder
 
 def start(inverted_index):
-    # inverted_index = build_index(inverted_index)
-    io_manager = search_engine.init()
-    search_engine.get_query_input(io_manager)
+    inverted_index = build_index(inverted_index)
+    # io_manager = search_engine.init()
+    # search_engine.get_query_input(io_manager)
 
 def build_index(inverted_index):
-    # inverted_index = index_builder.indexer(inverted_index)
-    # write_report(inverted_index)
-    # create_index_squared("inverted_index.txt")
+    inverted_index = index_builder.indexer(inverted_index)
+    # index_builder.write_report(inverted_index)
+    index_builder.create_index_squared("inverted_index.txt")
     pass
 
 # Stop words: do not use stopping while indexing, i.e. use all words, even the frequently occurring ones.

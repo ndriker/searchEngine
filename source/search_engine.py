@@ -1,6 +1,6 @@
 from collections import namedtuple
 from nltk.stem.snowball import SnowballStemmer
-from source.posting import Posting
+from posting import Posting
 
 IOManager = namedtuple('IOManager',
                        ['idx_of_idx_map', 'doc_ids_urls_map', 'idx_of_idx_file', 'inverted_file', 'doc_ids_urls_file'])
