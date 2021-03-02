@@ -49,6 +49,17 @@ def indexer(inverted_index):
     doc_id_file.close()
     return inverted_index
 
+def merge_indices(partial_file_names):
+    file_A = open(partial_file_names[0], 'r')
+    file_B = open(partial_file_names[1], 'r')
+    file_C = open(partial_file_names[2], 'r')
+
+    inverted_index = open("inverted_index.txt", 'w')
+
+    file_A_line, file_B_line, file_C_line = file_A.seek(0), file_B.seek(0), file_C.seek(0)
+    file_A_position, file_B_position, file_C_position = 0
+    while file_A_line != '' and file_B_line != '' and file_C_line != '':
+        file_A_line, file_B_line, file_C_line = file_A.readline(), file_B.readline(), file_C.readline()
 
 
 def extract_json_content(path, data_type):
