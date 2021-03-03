@@ -1,6 +1,7 @@
 from collections import namedtuple
 from nltk.stem.snowball import SnowballStemmer
 from posting import Posting
+import time
 
 IOManager = namedtuple('IOManager',
                        ['idx_of_idx_map', 'doc_ids_urls_map', 'idx_of_idx_file', 'inverted_file', 'doc_ids_urls_file'])
@@ -63,6 +64,7 @@ def get_query_input(io_manager):
         handle_input(raw_in.lower().strip(), io_manager)
 
 def handle_input(raw_input_str, io_manager):
+    start_time = time.time()
     # assuming input is just words with spaces
     tokens_postings_map = {}
     stemmer = SnowballStemmer(language='english')
@@ -95,8 +97,10 @@ def handle_input(raw_input_str, io_manager):
     intersections = find_word_intersection(tokens_postings_map)
     # print("intersections", intersections)
     urls = get_urls(intersections, io_manager)
+    end_time = time.time()
     # print(urls)
     print_urls(urls)
+    print("Time: ", end_time - start_time)
 
 
 def print_urls(urls):
