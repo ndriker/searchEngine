@@ -18,8 +18,7 @@ def indexer(inverted_index):
 
     #/home/fghiasi/M1_project/searchEngine/examples/aiclub_ics_uci_edu
     #/home/fghiasi/inf141Proj2_last_update/inf141Proj2/Assignment3/DEV
-    documents = searching_all_files('/home/fghiasi/M1_project/searchEngine/examples')
-    #C:\\Users\\NoobMaster69\\Desktop\\School\\CS 121 - Info Retrieval\\Assignments\\3-Search-Engine\\searchEngine\\examples\\aiclub_ics_uci_edu
+    documents = searching_all_files('C:\\Users\\NoobMaster69\\Desktop\\School\\CS 121 - Info Retrieval\\Assignments\\3-Search-Engine\\searchEngine\\searchEngine')
     # documents = ['/home/fghiasi/M1_project/searchEngine/examples/aiclub_ics_uci_edu']
 
     documents = np.array_split(documents, 3)
@@ -53,13 +52,50 @@ def merge_indices(partial_file_names):
     file_A = open(partial_file_names[0], 'r')
     file_B = open(partial_file_names[1], 'r')
     file_C = open(partial_file_names[2], 'r')
-
     inverted_index = open("inverted_index.txt", 'w')
 
-    file_A_line, file_B_line, file_C_line = file_A.seek(0), file_B.seek(0), file_C.seek(0)
-    file_A_position, file_B_position, file_C_position = 0
-    while file_A_line != '' and file_B_line != '' and file_C_line != '':
-        file_A_line, file_B_line, file_C_line = file_A.readline(), file_B.readline(), file_C.readline()
+    files = [file_A, file_B, file_C]
+    file_lines = [file_A.readline().strip("\n"), file_B.readline().strip("\n"), file_C.readline().strip("\n")]
+    # Reset file cursor back to starting position
+    for file in files:
+        file.seek(0)
+
+    # while file_A_line != '' or file_B_line != '' or file_C_line != '':
+    while file_lines[0] != '' or file_lines[1] != '' or file_lines[2] != '':
+
+        file_positions = [ file_A.tell(), file_B.tell(), file_C.tell() ]
+        file_lines = [ file_A.readline().strip("\n"), file_B.readline().strip("\n"), file_C.readline().strip("\n") ]
+
+        # Determine and write token
+        try:
+            earliest_token = min([line for line in file_lines if line != ""]) #min(file_lines) #[file_A_line, file_B_line, file_C_line])
+            inverted_index.write(earliest_token + "\n")
+        except ValueError:
+            return
+
+        postings = []
+        for i in range(len(file_lines)):
+            if file_lines[i] == earliest_token:
+                # Move pointer forward
+                # assuming we don't need to preserve doc id order
+                # ad-hoc-ly grab the postings and write to inverted_index
+
+                line = file_lines[i] # should be earliest_token
+                #line = files[i].readline().strip("\n")
+                while line != '$':
+                    line = files[i].readline().strip() # read first posting
+                    if line != '$':
+                        postings.append(line)
+            else:
+                # reset pointer back
+                files[i].seek(file_positions[i]) # EX: file_a.seek(file_a_position)
+
+        for posting in postings:
+            inverted_index.write(posting + "\n")
+
+        # write the $ separator
+        inverted_index.write("$\n")
+
 
 
 def extract_json_content(path, data_type):
