@@ -162,6 +162,26 @@ def find_word_intersection(tokens_postings_map):
     # print(list_of_sets)
     # list_of_sets = [] # [{4,5,6}, {4,5,6,7}, {1,2,3,4,5}]
 
+    ###############################################################################
+    # machine: 5 times
+    # learning: 5 times
+    # tf: 10
+    # intersection: {4}
+
+    # go through doc ids in intersection
+    # find postings (FROM OUR QUERY TERMS) with same doc id
+    # accumulate the TF (freq_counts) for that posting for that doc id
+
+    # doc_id_sum = {}
+    # for token, postings in tokens_postings_map:
+    #     for posting in postings: #no duplicates
+    #         if posting.doc_id in intersection: #no summing twice or more
+    #             doc_id_sum[posting.doc_id] += posting.freq_counts
+
+    # Ranking function from Lec 20:
+    # wt,d = (1+log(tft,d)) x log(N/dft)
+    ###############################################################################
+
     first_set = list_of_sets.pop(0)
     tokens_intersection = first_set.intersection(*list_of_sets)  # set of intersected doc ids
     # print(tokens_intersection)
