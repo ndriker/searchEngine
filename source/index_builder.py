@@ -12,13 +12,15 @@ import numpy as np
 ############### MILESTONE 1 #####################
 # https://stackoverflow.com/questions/39909655/listing-of-all-files-in-directory
 def indexer(inverted_index):
+    num_docs_file = open("num_docs.txt", 'w')
     partial_file_names = ["index_A.txt", "index_B.txt", "index_C.txt"]
     doc_id_file = open("doc_ids_urls.txt", "w")
     n = 0
 
     #/home/fghiasi/M1_project/searchEngine/examples/aiclub_ics_uci_edu
     #/home/fghiasi/inf141Proj2_last_update/inf141Proj2/Assignment3/DEV
-    documents = searching_all_files('C:\\Users\\NoobMaster69\\Desktop\\School\\CS 121 - Info Retrieval\\Assignments\\3-Search-Engine\\searchEngine\\searchEngine')
+    documents = searching_all_files('/home/fghiasi/inf141Proj2_last_update/inf141Proj2/Assignment3/DEV')
+    # documents = searching_all_files('/home/fghiasi/M1_project/searchEngine/examples')
     # documents = ['/home/fghiasi/M1_project/searchEngine/examples/aiclub_ics_uci_edu']
 
     documents = np.array_split(documents, 3)
@@ -45,6 +47,7 @@ def indexer(inverted_index):
         write_partial_index(inverted_index, partial_file_names[i])
         inverted_index = {}
         # inverted_index.clear()
+    num_docs_file.write(n)
     doc_id_file.close()
     return inverted_index
 

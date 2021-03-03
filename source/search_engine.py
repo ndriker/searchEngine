@@ -114,7 +114,17 @@ def get_urls(intersections, io_manager):
 
 # O(1) method (FAST)
 def get_postings(word_position, inverted_file_ptr):
-    print("lol implement me")
+    postings = []
+
+    inverted_file_ptr.seek(word_position)
+    line = inverted_file_ptr.readline().strip()
+    while line != '$':
+        line = inverted_file_ptr.readline().strip()
+        if line != '$':
+            p_values = line_txt.strip().split(',')  # 1,22,1035 -> ['1', '22', '1035']
+            assert 3 == len(p_values)
+            postings.append(Posting(p_values[0], p_values[1], p_values[2]))
+    return postings
 
 
 # O(n) method (SLOW)

@@ -5,17 +5,18 @@ import search_engine
 import index_builder
 
 def start(inverted_index):
-    # inverted_index = build_index(inverted_index)
+    inverted_index = build_index(inverted_index)
     # io_manager = search_engine.init()
     # search_engine.get_query_input(io_manager)
 
-    partial_file_names = ["index_A.txt", "index_B.txt", "index_C.txt"]
-    index_builder.merge_indices(partial_file_names)
-    print("DONE")
 
 def build_index(inverted_index):
     inverted_index = index_builder.indexer(inverted_index)
+    partial_file_names = ["index_A.txt", "index_B.txt", "index_C.txt"]
+    index_builder.merge_indices(partial_file_names)
     index_builder.create_index_squared("inverted_index.txt")
+    print("DONE")
+
     pass
 
 # Stop words: do not use stopping while indexing, i.e. use all words, even the frequently occurring ones.

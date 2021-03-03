@@ -1,6 +1,6 @@
 # ['calcul', 'paschk', 'fabian', 'bayer', 'christian', 'uwe', 'dick', 'olaf', 'lohweg', 'volker', 'sensorlos', 'zustandsã¼berwachung', 'synchronmotoren', 'bd', 'hoffmann', 'frank', 'hãœllermeier', 'eyk', 'hrsg', '23', 'karlsruh', 'kit', 'scientif', 'schriftenreih', 'des']
-with open("inverted_index2.txt") as f:
-    positions = [1474487]
+with open("inverted_index.txt") as f:
+    positions = [16203, 16203, 2000, 223]
     for i in positions:
         f.seek(i)
         print(f.readline().strip())
