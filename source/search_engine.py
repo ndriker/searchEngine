@@ -101,7 +101,10 @@ def handle_input(raw_input_str, io_manager):
         stemmed_word = stemmer.stem(word)
 
         ############# MILE STONE 3 ############
-        word_position = int(io_manager.idx_of_idx_map[stemmed_word]) #find the token's position in inverted_index
+        try:
+            word_position = int(io_manager.idx_of_idx_map[stemmed_word]) #find the token's position in inverted_index
+        except KeyError:
+            continue
         postings = get_postings(word_position, io_manager.inverted_file) #correct O(1) search
         ############# MILE STONE 3 ############
 
@@ -137,7 +140,6 @@ def get_urls(doc_ids_score_map, io_manager):
     urls = []
 
     for doc_id in sorted(doc_ids_score_map, key=doc_ids_score_map.get, reverse=True):
-        print(doc_ids_score_map[doc_id])
         if doc_id in io_manager.doc_ids_urls_map:
             urls.append(io_manager.doc_ids_urls_map[doc_id])
     return urls

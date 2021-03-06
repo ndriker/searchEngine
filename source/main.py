@@ -12,12 +12,10 @@ def start(inverted_index):
 
 
 def build_index(inverted_index):
-    # inverted_index = index_builder.indexer(inverted_index)
-    # partial_file_names = ["index_A.txt", "index_B.txt", "index_C.txt"]
-    # index_builder.merge_indices(partial_file_names)
+    inverted_index = index_builder.indexer(inverted_index)
+    partial_file_names = ["index_A.txt", "index_B.txt", "index_C.txt"]
+    index_builder.merge_indices(partial_file_names)
     index_builder.create_index_squared("inverted_index.txt")
-    print("DONE")
-
     pass
 
 # Stop words: do not use stopping while indexing, i.e. use all words, even the frequently occurring ones.

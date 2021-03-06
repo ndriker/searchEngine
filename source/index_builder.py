@@ -20,7 +20,7 @@ def indexer(inverted_index):
     #/home/fghiasi/M1_project/searchEngine/examples/aiclub_ics_uci_edu
     #/home/fghiasi/inf141Proj2_last_update/inf141Proj2/Assignment3/DEV
     documents = searching_all_files('/home/fghiasi/inf141Proj2_last_update/inf141Proj2/Assignment3/DEV')
-    # documents = searching_all_files('/home/fghiasi/M1_project/searchEngine/examples')
+    # documents = searching_all_files('/home/fghiasi/testing_M3/searchEngine/examples')
     # documents = ['/home/fghiasi/M1_project/searchEngine/examples/aiclub_ics_uci_edu']
 
     documents = np.array_split(documents, 3)
@@ -165,27 +165,35 @@ def tokenize(html_content):
     stemmer = SnowballStemmer(language='english')
     # shelly -> shelli (result of snowball stemmer)
     # https://snowballstem.org/demo.html
-    text_p = (''.join(s.findAll(text=True)) for s in soup.findAll('p'))
-    text_divs = (''.join(s.findAll(text=True)) for s in soup.findAll('div'))
+    # text_p = (''.join(s.findAll(text=True)) for s in soup.findAll('p'))
+    # text_divs = (''.join(s.findAll(text=True)) for s in soup.findAll('div'))
+    text = soup.get_text()
 
     important_text = (''.join(s.findAll(text=True)) for s in soup.findAll(['strong', "h1", "h2", "h3", "title", "b"]))
     important_dict = dict()
 
     pattern = "[\s.,!?:;'\"-#$%&<=>@[\\]^_`{|}~]+"
     tokens = list()
-    for paragraph in text_p:
-        for raw_word in re.split(pattern, paragraph):
-            token = raw_word.strip(punctuation).lower()
-            if token.isalnum() and re.match("^[a-zA-Z0-9]*$", token) and token != '':
-                word = stemmer.stem(token)
-                tokens.append(word)
 
-    for paragraph in text_divs:
-        for raw_word in re.split(pattern, paragraph):
-            token = raw_word.strip(punctuation).lower()
-            if token.isalnum() and re.match("^[a-zA-Z0-9]*$", token) and token != '':
-                word = stemmer.stem(token)
-                tokens.append(word)
+    for raw_word in re.split(pattern, text):
+        token = raw_word.strip(punctuation).lower()
+        if token.isalnum() and re.match("^[a-zA-Z0-9]*$", token) and token != '' and token != '\n':
+            word = stemmer.stem(token)
+            tokens.append(word)
+
+    # for paragraph in text_p:
+    #     for raw_word in re.split(pattern, paragraph):
+    #         token = raw_word.strip(punctuation).lower()
+    #         if token.isalnum() and re.match("^[a-zA-Z0-9]*$", token) and token != '':
+    #             word = stemmer.stem(token)
+    #             tokens.append(word)
+    #
+    # for paragraph in text_divs:
+    #     for raw_word in re.split(pattern, paragraph):
+    #         token = raw_word.strip(punctuation).lower()
+    #         if token.isalnum() and re.match("^[a-zA-Z0-9]*$", token) and token != '':
+    #             word = stemmer.stem(token)
+    #             tokens.append(word)
 
     for paragraph in important_text:
         for raw_word in re.split(pattern, paragraph):
