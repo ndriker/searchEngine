@@ -123,12 +123,13 @@ def handle_input(raw_input_str, io_manager):
     intersections = find_word_intersection(tokens_postings_map)
 
     doc_ids_score_map = calculate_ranking(tokens_postings_map, intersections)
-    # print("intersections", intersections)
+
     urls = get_urls(doc_ids_score_map, io_manager)
     end_time = time.time()
-    # print(urls)
     print_urls(urls)
     print("Time: ", end_time - start_time)
+    #total_time = end_time - start_time
+    return urls
 
 
 def print_urls(urls):
@@ -140,10 +141,29 @@ def get_urls(doc_ids_score_map, io_manager):
     # O(1)
     urls = []
 
+    # # New 1
+    # for doc_id in doc_ids_score_map:
+    #     if doc_id in io_manager.doc_ids_urls_map: #O(1)
+    #         urls.add(io_manager.doc_ids_urls_map[doc_id])
+    #
+    # # New 2:
+    # for doc_id in sorted(doc_ids_score_map, key=doc_ids_score_map.get, reverse=True):
+    #     if doc_id in io_manager.doc_ids_urls_map:
+    #         urls.add(io_manager.doc_ids_urls_map[doc_id])
+
+    # OLD
     for doc_id in sorted(doc_ids_score_map, key=doc_ids_score_map.get, reverse=True):
         if doc_id in io_manager.doc_ids_urls_map:
             urls.append(io_manager.doc_ids_urls_map[doc_id])
-    return urls
+    return list(dict.fromkeys(urls))
+    #return urls
+
+    # New 3:
+    # items = [1, 2, 0, 1, 3, 2]
+    # list(dict.fromkeys(items))
+    # -> [1, 2, 0, 3]
+    # dict.fromkeys(urls)
+    # return list(dict.fromkeys(items))
 
 # O(1) method (FAST)
 def get_postings(word_position, inverted_file_ptr):
@@ -155,8 +175,6 @@ def get_postings(word_position, inverted_file_ptr):
         line = inverted_file_ptr.readline().strip()
         if line != '$':
             p_values = line.strip().split(',')  # 1,22,1035 -> ['1', '22', '1035']
-            print(p_values)
-            print(word_position)
             assert 3 == len(p_values)
             postings.append(Posting(p_values[0], p_values[1], p_values[2]))
     return postings

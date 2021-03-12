@@ -4,12 +4,10 @@
 import search_engine
 import index_builder
 
-
 from app import *
 from db_setup import init_db
 from forms import MusicSearchForm
 from flask import flash, render_template, request, redirect
-
 
 io_manager = None
 init_db()
@@ -36,11 +34,9 @@ def build_index(inverted_index):
 # Verify which are the relevant HTML tags to select the important words
 
 
-
-
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    print(io_manager == None)
+    print(io_manager is None)
     search = MusicSearchForm(request.form)
     if request.method == 'POST':
         return search_results(search)
@@ -53,23 +49,17 @@ def search_results(search):
     query = search.data['search'].strip()
     print("query is: ", search.data['search'])
 
-    results = []
-
+    url_results = None
 
     if query == '':
         # flash('Please Enter your search query.')
         pass
     else:
-        search_engine.handle_input(query, io_manager)
-        pass
+        url_results = search_engine.handle_input(query, io_manager)
 
-    if not results:
-        flash('Search resault 1')
-        flash('Search resault 2')
-        flash('Search resault 3')
-        flash('Search resault 4')
-        flash('Search resault 5')
-        flash('Search resault 6')
+    if url_results:
+        for i in range(min(10, len(url_results))):
+            flash(url_results[i])
         return redirect('/')
     else:
         # display results

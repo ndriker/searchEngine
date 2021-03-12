@@ -9,6 +9,7 @@ from flask_sqlalchemy import SQLAlchemy
 # io_manager = None
 
 app = Flask(__name__)
+app.static_folder = "static"
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///mymusic.db'
 app.secret_key = "flask rocks!"
 
