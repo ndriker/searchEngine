@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+
+<html>
+    <body style="text-align:center">
+    <img src='resources/logo.jpg' alt="goggleLogo">
+    <p> Your sight into the web </p>
+    <form class="pure-form">
+        <input type="text" id="query" name="query" placeholder="Enter your query here"><br><br>
+        <input type="submit" value="Search">
+    </form>         
+        
+    <script>
+        document.querySelector("form.pure-form").addEventListener('submit', function (e) {
+            e.preventDefault()
+            var myQuery = document.getElementById('query')
+            console.log(myQuery.value)
+
+        
+        });
+    </script>
+    <script src="scripts/runPython.js"></script>
+    </body>
+</html>
