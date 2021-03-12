@@ -80,10 +80,11 @@ def load_doc_ids_urls_map(doc_ids_urls_file):
     return doc_ids_urls_map
 
 
-def get_query_input(io_manager):
-    while True:
-        raw_in = input("Enter your query: ")
-        handle_input(raw_in.lower().strip(), io_manager)
+def get_query_input(io_manager, query):
+    # while True:
+    #     raw_in = input("Enter your query: ")
+    #     handle_input(raw_in.lower().strip(), io_manager)
+    pass
 
 def handle_input(raw_input_str, io_manager):
     start_time = time.time()

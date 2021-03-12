@@ -1,26 +1,33 @@
 <doctype html>
 <head>
-    <title>Flask Music Database</title>
+    <title>CS 131 gang Project</title>
 </head>
 
-<h2>Flask Music Database</h2>
+<h2>CS 131 gang Project</h2>
 
-{% with messages = get_flashed_messages() %}
-  {% if messages %}
-    <ul class=flashes>
-    {% for message in messages %}
-      <li>{{ message }}</li>
-    {% endfor %}
-    </ul>
-  {% endif %}
-{% endwith %}
+
 
 {% from "_formhelpers.html" import render_field %}
 <form method=post>
   <dl>
-    {{ render_field(form.select) }}
-    <p>
-    {{ render_field(form.search) }}
+      <body style="text-align:center">
+        <img src='templates/logo.jpg' alt="goggleLogo">
+        <p> Your sight into the web </p>
+        <p><input type=submit value=Search placeholder="Enter your query here"><br><br></p>
+        <p> {{ render_field(form.search) }}</p>
+       </body>
   </dl>
-  <p><input type=submit value=Search>
 </form>
+
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <ul class=flashes>
+            {% for message in messages %}
+                <a href="{{ message }}">{{ message }}</a><br><br>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endwith %}
+
+
+
