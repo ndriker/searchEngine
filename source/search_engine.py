@@ -155,6 +155,8 @@ def get_postings(word_position, inverted_file_ptr):
         line = inverted_file_ptr.readline().strip()
         if line != '$':
             p_values = line.strip().split(',')  # 1,22,1035 -> ['1', '22', '1035']
+            print(p_values)
+            print(word_position)
             assert 3 == len(p_values)
             postings.append(Posting(p_values[0], p_values[1], p_values[2]))
     return postings
