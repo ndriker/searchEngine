@@ -156,14 +156,6 @@ def get_urls(doc_ids_score_map, io_manager):
         if doc_id in io_manager.doc_ids_urls_map:
             urls.append(io_manager.doc_ids_urls_map[doc_id])
     return list(dict.fromkeys(urls))
-    #return urls
-
-    # New 3:
-    # items = [1, 2, 0, 1, 3, 2]
-    # list(dict.fromkeys(items))
-    # -> [1, 2, 0, 3]
-    # dict.fromkeys(urls)
-    # return list(dict.fromkeys(items))
 
 # O(1) method (FAST)
 def get_postings(word_position, inverted_file_ptr):

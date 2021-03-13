@@ -36,7 +36,6 @@ def build_index(inverted_index):
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    print(io_manager is None)
     search = MusicSearchForm(request.form)
     if request.method == 'POST':
         return search_results(search)
@@ -52,8 +51,8 @@ def search_results(search):
     url_results = None
 
     if query == '':
-        # flash('Please Enter your search query.')
-        pass
+        flash('Please Enter your search query.')
+        return redirect('/')
     else:
         url_results = search_engine.handle_input(query, io_manager)
 
@@ -61,9 +60,11 @@ def search_results(search):
         for i in range(min(10, len(url_results))):
             flash(url_results[i])
         return redirect('/')
-    else:
+    else: #query returned no results
+        flash('No results found.')
+        return redirect('/')
         # display results
-        return render_template('results.html', table=table)
+        # return render_template('results.html', table=table)
 
 
 if __name__ == '__main__':

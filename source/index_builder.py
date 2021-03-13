@@ -51,15 +51,15 @@ def indexer(inverted_index):
     doc_id_file.close()
     return inverted_index
 
-def xd():
-    num_docs_file = open("num_docs.txt", 'w')
-    documents = searching_all_files('/home/fghiasi/inf141Proj2_last_update/inf141Proj2/Assignment3/DEV')
-    n = str(len(documents))
-    num_docs_file.write(n)
-    num_docs_file.close()
-
-    partial_file_names = ["index_A.txt", "index_B.txt", "index_C.txt"]
-    merge_indices(partial_file_names)
+# def xd():
+#     num_docs_file = open("num_docs.txt", 'w')
+#     documents = searching_all_files('/home/fghiasi/inf141Proj2_last_update/inf141Proj2/Assignment3/DEV')
+#     n = str(len(documents))
+#     num_docs_file.write(n)
+#     num_docs_file.close()
+#
+#     partial_file_names = ["index_A.txt", "index_B.txt", "index_C.txt"]
+#     merge_indices(partial_file_names)
 
 
 def merge_indices(partial_file_names):
