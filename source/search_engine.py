@@ -141,21 +141,11 @@ def get_urls(doc_ids_score_map, io_manager):
     # O(1)
     urls = []
 
-    # # New 1
-    # for doc_id in doc_ids_score_map:
-    #     if doc_id in io_manager.doc_ids_urls_map: #O(1)
-    #         urls.add(io_manager.doc_ids_urls_map[doc_id])
-    #
-    # # New 2:
-    # for doc_id in sorted(doc_ids_score_map, key=doc_ids_score_map.get, reverse=True):
-    #     if doc_id in io_manager.doc_ids_urls_map:
-    #         urls.add(io_manager.doc_ids_urls_map[doc_id])
-
     # OLD
     for doc_id in sorted(doc_ids_score_map, key=doc_ids_score_map.get, reverse=True):
         if doc_id in io_manager.doc_ids_urls_map:
             urls.append(io_manager.doc_ids_urls_map[doc_id])
-    return list(dict.fromkeys(urls))
+    return list(dict.fromkeys(urls)) #remove duplicates while retaining order
 
 # O(1) method (FAST)
 def get_postings(word_position, inverted_file_ptr):
@@ -245,6 +235,7 @@ def compute_important_words(important_counter):
         return 1 + math.log(important_counter, 10) #if 100, then -> 1 + 2 = 3
     return 0
 
+# TF-IDF for each document
 def calculate_ranking(tokens_posting_maps, intersections):
     doc_id_score_map = defaultdict(int) # default dict of ints
     # Intersections {4,5,6}
